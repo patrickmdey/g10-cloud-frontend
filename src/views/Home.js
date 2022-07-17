@@ -1,7 +1,5 @@
+import ChargeHours from './ChargeHours';
+
 export default function Home() {
-	return (
-		<div>
-			<h1>Home</h1>
-		</div>
-	);
+	return <ChargeHours />;
 }

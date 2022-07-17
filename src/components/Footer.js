@@ -12,9 +12,10 @@ export default function Footer() {
 				<div className='col-4'>
 					<ListGroup as='ul' className='col-6 list-unstyled'>
 						<h3 className='h3 fw-bold color-grey'>Team</h3>
-						<ListGroupItem bsPrefix='color-grey fw-bold mt-2'>Santos Rosati</ListGroupItem>
-						<ListGroupItem bsPrefix='color-grey fw-bold mt-2'>Matias Lombardi</ListGroupItem>
+						<ListGroupItem bsPrefix='color-grey fw-bold mt-2'>Julian Arce</ListGroupItem>
 						<ListGroupItem bsPrefix='color-grey fw-bold mt-2'>Patrick Dey</ListGroupItem>
+						<ListGroupItem bsPrefix='color-grey fw-bold mt-2'>Santos Rosati</ListGroupItem>
+						<ListGroupItem bsPrefix='color-grey fw-bold mt-2'>Camila Sierra</ListGroupItem>
 					</ListGroup>
 				</div>
 
@@ -23,17 +24,22 @@ export default function Footer() {
 						<ListGroupItem bsPrefix='h3 fw-bold color-grey'>Contact</ListGroupItem>
 						<ListGroupItem bsPrefix='lead color-grey'>
 							<a href='mailto:srosati@itba.edu.ar' className='color-secondary ms-1 pb-1'>
-								srosati@itba.edu.ar
-							</a>
-						</ListGroupItem>
-						<ListGroupItem bsPrefix='lead color-grey'>
-							<a href='mlombardi@itba.edu.ar' className='color-secondary ms-1 pb-1'>
-								mlombardi@itba.edu.ar
+								juarce@itba.edu.ar
 							</a>
 						</ListGroupItem>
 						<ListGroupItem bsPrefix='lead color-grey'>
 							<a href='mailto:pdey@itba.edu.ar' className='color-secondary ms-1 pb-1'>
 								pdey@itba.edu.ar
+							</a>
+						</ListGroupItem>
+						<ListGroupItem bsPrefix='lead color-grey'>
+							<a href='mailto:srosati@itba.edu.ar' className='color-secondary ms-1 pb-1'>
+								srosati@itba.edu.ar
+							</a>
+						</ListGroupItem>
+						<ListGroupItem bsPrefix='lead color-grey'>
+							<a href='mlombardi@itba.edu.ar' className='color-secondary ms-1 pb-1'>
+								csierra@itba.edu.ar
 							</a>
 						</ListGroupItem>
 					</ListGroup>
@@ -43,7 +49,7 @@ export default function Footer() {
 				className='bg-color-secondary d-flex justify-content-center align-content-center'
 				style={{ height: '40px' }}
 			>
-				<p className='fw-light'>Bases de Datos 2 - Grupo PMS</p>
+				<p className='fw-light'>Cloud Computing - Grupo 10</p>
 			</Card.Footer>
 		</footer>
 	);

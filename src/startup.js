@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import RouteMapper from './views/routeMapper';
+import RouteMapper from './views/RouteMapper';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Footer from './components/Footer';
 import Header from './components/Header';

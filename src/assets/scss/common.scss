@@ -19,6 +19,10 @@ body {
 	overflow-y: visible;
 }
 
+tr > td {
+	@extend .lead;
+}
+
 h1,
 h2,
 h3,
@@ -131,8 +135,13 @@ i.overflow-icon:hover {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin-left: 15%;
-	margin-right: 15%;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+.table-container {
+	margin-left: 10%;
+	margin-right: 10%;
 }
 
 .min-height {

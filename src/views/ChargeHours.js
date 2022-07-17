@@ -1,7 +1,8 @@
-import { Card, Table } from 'react-bootstrap';
+import { Table, Button, Dropdown } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { useCreateTimesheet, useListTimesheets } from '../api/timesheets/timesheetsSlice.js';
+import { useCreateTimesheet, useDeleteTimesheet, useListTimesheets } from '../api/timesheets/timesheetsSlice.js';
 import { useListCategories } from '../api/categories/categoriesSlice.js';
+import { BsPencilFill, BsTrash } from 'react-icons/bs';
 import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import FormInput from '../components/FormInputs/FormInput.js';
@@ -18,20 +19,28 @@ export default function ChargeHours() {
 	// const { data: categories, isSuccess: categoriesIsSuccess } = useListCategories();
 
 	let categoriesIsSuccess = true;
-	let categories = ['RHHH', 'IT', 'Marketing', 'Sales', 'Accounting'];
+	let categories = [
+		[1, 'RHHH'],
+		[2, 'IT'],
+		[3, 'Marketing']
+	];
 
 	const [newTimesheetIndex, setNewTimesheetIndex] = useState(0);
 
-	const [createTimesheet, result] = useCreateTimesheet();
+	const [createTimesheet] = useCreateTimesheet();
+
+	const [deleteTimesheet] = useDeleteTimesheet();
 
 	useEffect(() => {
 		if (!timesheetsIsSuccess || !timesheets || timesheets.length === 0) {
-			setNewTimesheetIndex(-1);
+			setNewTimesheetIndex(1);
 			return;
 		}
 
 		setNewTimesheetIndex(timesheets.length);
 	}, [timesheetsIsSuccess, timesheets]);
+
+	const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
 	function onSubmit(data) {
 		if (data == null) return;
@@ -39,11 +48,27 @@ export default function ChargeHours() {
 	}
 
 	return (
-		<div>
-			<h1>Charge Hours</h1>
+		<div className='table-container'>
+			<h1 className='h1 fw-bold'>Charge Hours</h1>
+			<div className='d-flex justify-content-end align-center'>
+				<p>Select</p>
+				<Dropdown>
+					<Dropdown.Toggle variant='success' id='dropdown-basic'>
+						Month
+					</Dropdown.Toggle>
+					<Dropdown.Menu>
+						{timesheetsIsSuccess && timesheets && timesheets.length > 0 && (
+							<Dropdown.Item onClick={() => setCurrentMonth}>
+								{timesheets[timesheets.length - 1].month}
+							</Dropdown.Item>
+						)}
+					</Dropdown.Menu>
+				</Dropdown>
+			</div>
+
 			<Form onSubmit={handleSubmit(onSubmit)}>
-				<Table striped bordered hover>
-					<thead>
+				<Table striped bordered>
+					<thead className='bg-color-secondary'>
 						<tr>
 							<th>#</th>
 							<th>First Name</th>
@@ -51,6 +76,7 @@ export default function ChargeHours() {
 							<th>Category</th>
 							<th>Hours</th>
 							<th>Date</th>
+							<th>Options</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -64,13 +90,21 @@ export default function ChargeHours() {
 									<td>{timesheet.category.name}</td>
 									<td>{timesheet.hours}</td>
 									<td>{timesheet.date}</td>
+									<td className='d-flex justify-content-center'>
+										<BsPencilFill className='fa-lg color-action' onClick={() => 1} />
+										<BsTrash
+											className='fa-lg color-danger'
+											onClick={() => deleteTimesheet(timesheet.id)}
+										/>
+									</td>
 								</tr>
 							))}
-						<tr>
-							<td className='lead'>{newTimesheetIndex}</td>
-							<td className='lead'>Patrick</td>
-							<td className='lead'>Dey</td>
-							<td className='lead'>
+
+						<tr className='bg-color-white'>
+							<td>{newTimesheetIndex}</td>
+							<td>Patrick</td>
+							<td>Dey</td>
+							<td>
 								{categoriesIsSuccess && categories && (
 									<FormSelect
 										register={register}
@@ -80,26 +114,17 @@ export default function ChargeHours() {
 									/>
 								)}
 							</td>
-							<td className='lead'>{3}</td>
-							<td className='lead'>{new Date().toLocaleString()}</td>
+							<td>{3}</td>
+							<td>{new Date().toLocaleString()}</td>
+							<td>
+								<div className='d-flex justify-content-star'>
+									<Button type='submit' className='me-3'>
+										Aceptar
+									</Button>
+									<Button variant='outline-danger'>Cancelar</Button>
+								</div>
+							</td>
 						</tr>
-						{/* <tr>
-						<td>1</td>
-						<td>Mark</td>
-						<td>Otto</td>
-						<td>@mdo</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>@fat</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td colSpan={2}>Larry the Bird</td>
-						<td>@twitter</td>
-					</tr> */}
 					</tbody>
 				</Table>
 			</Form>

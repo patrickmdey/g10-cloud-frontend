@@ -27,9 +27,9 @@ function LoggedInNavBar(props) {
 				</Nav.Link>
 			</LinkContainer>
 
-			<LinkContainer to='/new-url'>
+			<LinkContainer to='/charge'>
 				<Nav.Link as='a' className='active fw-bold nav-bar-link'>
-					Create Alias
+					Charge Hours
 				</Nav.Link>
 			</LinkContainer>
 
@@ -90,7 +90,7 @@ export default function Header() {
 			<Container>
 				<LinkContainer to='/'>
 					<Navbar.Brand>
-						<Image alt='rentapp' src={logo} height='50px' />
+						<Image alt='rentapp' src={logo} height='60px' />
 					</Navbar.Brand>
 				</LinkContainer>
 				<Navbar.Toggle aria-controls='responsive-navbar-nav' />
