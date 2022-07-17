@@ -1,4 +1,4 @@
-import { Table, Button, Dropdown } from 'react-bootstrap';
+import { Table, Button, Dropdown, InputGroup, FormControl } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useCreateTimesheet, useDeleteTimesheet, useListTimesheets } from '../api/timesheets/timesheetsSlice.js';
 // import { useListCategories } from '../api/categories/categoriesSlice.js';
@@ -94,8 +94,8 @@ export default function ChargeHours() {
 							<th>Last Name</th>
 							<th>Task</th>
 							<th>Category</th>
-							<th>Hours</th>
 							<th>Date</th>
+							<th>Hours</th>
 							<th>Options</th>
 						</tr>
 					</thead>
@@ -105,12 +105,12 @@ export default function ChargeHours() {
 							timesheets.map((timesheet, index) => (
 								<tr key={index}>
 									<td>{index + 1}</td>
-									<td>{timesheet.user.firstName}</td>
-									<td>{timesheet.user.lastName}</td>
-									<td>{timesheet.category.task}</td>
-									<td>{timesheet.category.name}</td>
-									<td>{timesheet.hours}</td>
+									<td>{timesheet.firstName}</td>
+									<td>{timesheet.lastName}</td>
+									<td>{timesheet.task}</td>
+									<td>{timesheet.category}</td>
 									<td>{timesheet.date}</td>
+									<td>{timesheet.hours}</td>
 									<td className='d-flex justify-content-center'>
 										<BsPencilFill className='fa-lg color-action' onClick={() => 1} />
 										<BsTrash
@@ -126,7 +126,9 @@ export default function ChargeHours() {
 							<td>Patrick</td>
 							<td>Dey</td>
 							<td>
-								<input></input>
+								<InputGroup>
+									<FormControl as='textarea' placeholder='Task' {...register} />
+								</InputGroup>
 							</td>
 							<td>
 								{categoriesIsSuccess && categories && (
@@ -138,10 +140,12 @@ export default function ChargeHours() {
 									/>
 								)}
 							</td>
-							<td>
-								<input type='number'></input>
-							</td>
 							<td>{new Date().toLocaleString()}</td>
+							<td>
+								<InputGroup>
+									<FormControl type='number' placeholder='Amount' {...register} />
+								</InputGroup>
+							</td>
 							<td>
 								<div className='d-flex justify-content-star'>
 									<Button type='submit' className='me-3'>

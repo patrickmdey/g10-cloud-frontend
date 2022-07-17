@@ -7,6 +7,7 @@ import Error from '../components/Error.js';
 // import { useLocation, Navigate } from 'react-router-dom';
 import Register from './Register';
 import ChargeHours from './ChargeHours';
+import CheckProjects from './CheckProjects';
 // function RequireAuth(props) {
 // 	const id = useUserId();
 // 	const location = useLocation();
@@ -34,6 +35,14 @@ export default function RouteMapper() {
 					element={
 						// <RequireAuth>
 						<ChargeHours />
+						// </RequireAuth>
+					}
+				/>
+				<Route
+					path='/all'
+					element={
+						// <RequireAuth>
+						<CheckProjects />
 						// </RequireAuth>
 					}
 				/>
