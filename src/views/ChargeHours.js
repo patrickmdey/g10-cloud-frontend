@@ -1,11 +1,11 @@
 import { Table, Button, Dropdown } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useCreateTimesheet, useDeleteTimesheet, useListTimesheets } from '../api/timesheets/timesheetsSlice.js';
-import { useListCategories } from '../api/categories/categoriesSlice.js';
+// import { useListCategories } from '../api/categories/categoriesSlice.js';
 import { BsPencilFill, BsTrash } from 'react-icons/bs';
 import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
-import FormInput from '../components/FormInputs/FormInput.js';
+// import FormInput from '../components/FormInputs/FormInput.js';
 import FormSelect from '../components/FormInputs/FormSelect.js';
 
 export default function ChargeHours() {
@@ -26,6 +26,7 @@ export default function ChargeHours() {
 	];
 
 	const [newTimesheetIndex, setNewTimesheetIndex] = useState(0);
+	const [prevMonths, setPrevMonths] = useState([]);
 
 	const [createTimesheet] = useCreateTimesheet();
 
@@ -40,6 +41,20 @@ export default function ChargeHours() {
 		setNewTimesheetIndex(timesheets.length);
 	}, [timesheetsIsSuccess, timesheets]);
 
+	useEffect(() => {
+		if (!timesheetsIsSuccess || !timesheets || timesheets.length === 0) {
+			setPrevMonths([Date.now()]);
+			return;
+		}
+		let lastMonth = timesheets[timesheets.length - 1].date;
+		let prevMonths = [];
+		for (let i = 0; i < 3; i++) {
+			prevMonths.push(lastMonth - i * 30 * 24 * 60 * 60 * 1000);
+		}
+
+		setCurrentMonth(prevMonths);
+	}, [timesheetsIsSuccess, timesheets]);
+
 	const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
 	function onSubmit(data) {
@@ -50,18 +65,22 @@ export default function ChargeHours() {
 	return (
 		<div className='table-container'>
 			<h1 className='h1 fw-bold'>Charge Hours</h1>
-			<div className='d-flex justify-content-end align-center'>
-				<p>Select</p>
+			<div className='d-flex justify-content-end align-items-center'>
 				<Dropdown>
 					<Dropdown.Toggle variant='success' id='dropdown-basic'>
-						Month
+						Select Month
 					</Dropdown.Toggle>
 					<Dropdown.Menu>
-						{timesheetsIsSuccess && timesheets && timesheets.length > 0 && (
-							<Dropdown.Item onClick={() => setCurrentMonth}>
-								{timesheets[timesheets.length - 1].month}
-							</Dropdown.Item>
-						)}
+						{timesheetsIsSuccess &&
+							timesheets &&
+							timesheets.length > 0 &&
+							prevMonths.map((month) => {
+								return (
+									<Dropdown.Item key={month} onClick={() => setCurrentMonth(month)}>
+										{new Date(month).toLocaleDateString('en-US', { month: 'long' })}
+									</Dropdown.Item>
+								);
+							})}
 					</Dropdown.Menu>
 				</Dropdown>
 			</div>
@@ -73,6 +92,7 @@ export default function ChargeHours() {
 							<th>#</th>
 							<th>First Name</th>
 							<th>Last Name</th>
+							<th>Task</th>
 							<th>Category</th>
 							<th>Hours</th>
 							<th>Date</th>
@@ -87,6 +107,7 @@ export default function ChargeHours() {
 									<td>{index + 1}</td>
 									<td>{timesheet.user.firstName}</td>
 									<td>{timesheet.user.lastName}</td>
+									<td>{timesheet.category.task}</td>
 									<td>{timesheet.category.name}</td>
 									<td>{timesheet.hours}</td>
 									<td>{timesheet.date}</td>
@@ -105,6 +126,9 @@ export default function ChargeHours() {
 							<td>Patrick</td>
 							<td>Dey</td>
 							<td>
+								<input></input>
+							</td>
+							<td>
 								{categoriesIsSuccess && categories && (
 									<FormSelect
 										register={register}
@@ -114,7 +138,9 @@ export default function ChargeHours() {
 									/>
 								)}
 							</td>
-							<td>{3}</td>
+							<td>
+								<input type='number'></input>
+							</td>
 							<td>{new Date().toLocaleString()}</td>
 							<td>
 								<div className='d-flex justify-content-star'>
