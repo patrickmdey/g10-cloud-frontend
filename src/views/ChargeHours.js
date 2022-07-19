@@ -139,13 +139,11 @@ export default function ChargeHours() {
 							</tr>
 							))
 							) : (
-							<div className="d-flex justify-content-center">
-								<Spinner
-								animation="border"
-								className="color-secondary"
-								variant="primary"
-								/>
-							</div>
+							<tr>
+								<td colSpan={8} className='text-center'>
+									<Spinner animation="border" className="color-secondary" variant="primary" />
+								</td>
+							</tr>
             			)}
 						<tr className='bg-color-white'>
 							<td>{newTimesheetIndex}</td>
