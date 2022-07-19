@@ -1,32 +1,54 @@
-import { BaseApiSlice } from '../baseApiSlice';
+// import { BaseApiSlice } from '../baseApiSlice';
+import { AuthenticationDetails, CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
 
-const AuthApiSlice = BaseApiSlice.injectEndpoints({
-	endpoints: (build) => ({
-		login: build.mutation({
-			query: ({ email, password }) => {
-				return {
-					url: 'auth/login',
-					method: 'POST',
-					body: {
-						email: email,
-						password: password
-					}
-				};
-			},
-			transformResponse: (response, meta, { callback }) => {
-				const token = response.token;
-				if (token == null) return callback(null);
+import { useState } from 'react';
 
-				return callback(token);
+const poolData = {
+	UserPoolId: process.env.REACT_APP_USER_POOL, // Your user pool id here
+	ClientId: process.env.REACT_APP_CLIENT_ID // Your client id here
+};
+
+const userPool = new CognitoUserPool(poolData);
+
+export function useLogin() {
+	const [result, setResult] = useState(null);
+	const [loggedUser, setLoggedUser] = useState(null);
+	const [error, setError] = useState(null);
+
+	const login = ({ email, password }) => {
+		const cognitoUser = new CognitoUser({
+			Username: email,
+			Pool: userPool
+		});
+
+		const authenticationDetails = new AuthenticationDetails({
+			Username: email,
+			Password: password
+		});
+
+		cognitoUser.authenticateUser(authenticationDetails, {
+			onSuccess: function (result) {
+				const accessToken = result.getAccessToken().getJwtToken();
+				setResult(accessToken);
+				setLoggedUser(result.getIdToken().payload.email);
 			},
-			invalidatesTags: () => [
-				{
-					type: 'Url',
-					id: 'PARTIAL-LIST'
+
+			onFailure: function (err) {
+				setError(err);
+			},
+
+			newPasswordRequired: function (_, requiredAtributes) {
+				const attributes = [];
+				for (var i = 0; i < requiredAtributes.length; i++) {
+					attributes.push({
+						Name: requiredAtributes[i],
+						Value: null
+					});
 				}
-			]
-		})
-	})
-});
+				cognitoUser.completeNewPasswordChallenge(password, attributes, this);
+			}
+		});
+	};
 
-export const { useLoginMutation: useLogin } = AuthApiSlice;
+	return [login, result, loggedUser, error];
+}

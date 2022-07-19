@@ -10,14 +10,13 @@ import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 
 import logo from '../assets/img/logo.png';
+import useUserEmail from '../hooks/useUserEmail';
 
 function LoggedInNavBar(props) {
-	const { userId, dispatch } = props;
-	const [name, setName] = useState('');
-	const { data: user } = useFindUser(userId);
+	const { dispatch } = props;
 	const navigate = useNavigate();
 
-	useEffect(() => setName(user ? user.email : ''), [user]);
+	const name = useUserEmail();
 
 	return (
 		<>
@@ -69,12 +68,6 @@ function LoggedOutNavBar() {
 			<LinkContainer to='/login'>
 				<Nav.Link as='a' className='active fw-bold'>
 					Login
-				</Nav.Link>
-			</LinkContainer>
-
-			<LinkContainer to='/register'>
-				<Nav.Link as='a' className='active fw-bold'>
-					Signup
 				</Nav.Link>
 			</LinkContainer>
 		</React.Fragment>

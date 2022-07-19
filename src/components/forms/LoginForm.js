@@ -1,6 +1,6 @@
 import { Button, Card, Form, Row, Stack } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useLogin } from '../../api/authentication/authenticationSlice';
 import FormInput from '../FormInputs/FormInput';
@@ -11,9 +11,10 @@ import { useDispatch } from 'react-redux';
 
 export default function LogInComponent() {
 	const [isLoginError, setIsLoginError] = useState(false);
+	const [rememberMe, setRememberMe] = useState(false);
 	const { state } = useLocation();
 
-	const [login] = useLogin();
+	const [login, token, loggedUserEmail, error] = useLogin();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -25,21 +26,21 @@ export default function LogInComponent() {
 		defaultValues: { email: '', password: '' }
 	});
 
-	function useOnSubmit(data) {
-		const rememberMe = data.rememberMe;
-		login({
-			...data,
-			callback: (token) => {
-				if (token == null) {
-					setIsLoginError(true);
-					return;
-				}
+	useEffect(() => {
+		if (token == null || loggedUserEmail == null) return;
 
-				setIsLoginError(false);
-				dispatch(setCredentials({ token, rememberMe }));
-				state?.path ? navigate(state?.path) : navigate(-1);
-			}
-		});
+		setIsLoginError(false);
+		dispatch(setCredentials({ token, loggedUserEmail, rememberMe }));
+		state?.path ? navigate(state?.path) : navigate(-1);
+	}, [token, loggedUserEmail]);
+
+	useEffect(() => {
+		if (error != null) setIsLoginError(true);
+	}, [error]);
+
+	function useOnSubmit(data) {
+		setRememberMe(data.rememberMe);
+		login(data);
 	}
 
 	return (
