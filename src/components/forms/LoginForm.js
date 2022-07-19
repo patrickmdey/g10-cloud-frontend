@@ -14,7 +14,7 @@ export default function LogInComponent() {
 	const [rememberMe, setRememberMe] = useState(false);
 	const { state } = useLocation();
 
-	const [login, token, loggedUserEmail, error] = useLogin();
+	const [login, token, loggedUser, error] = useLogin();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -27,12 +27,12 @@ export default function LogInComponent() {
 	});
 
 	useEffect(() => {
-		if (token == null || loggedUserEmail == null) return;
+		if (token == null || loggedUser == null) return;
 
 		setIsLoginError(false);
-		dispatch(setCredentials({ token, loggedUserEmail, rememberMe }));
+		dispatch(setCredentials({ token, loggedUser, rememberMe }));
 		state?.path ? navigate(state?.path) : navigate(-1);
-	}, [token, loggedUserEmail]);
+	}, [token, loggedUser]);
 
 	useEffect(() => {
 		if (error != null) setIsLoginError(true);

@@ -8,6 +8,8 @@ import { Form } from 'react-bootstrap';
 import FormInput from '../components/FormInputs/FormInput.js';
 import FormSelect from '../components/FormInputs/FormSelect.js';
 
+import useFullUser from '../hooks/useFullUser.js';
+
 const MONTHS = [
 	'January',
 	'February',
@@ -25,7 +27,6 @@ const MONTHS = [
 
 function toMonth(idx) {
 	if (idx < 0) return MONTHS[12 + idx];
-	console.log(`${idx}-${MONTHS[idx]}`);
 	return MONTHS[idx];
 }
 
@@ -42,9 +43,11 @@ export default function ChargeHours() {
 		reset
 	} = useForm();
 
+	const user = useFullUser();
+
 	const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
-	const { data: timesheets, isSuccess: timesheetsIsSuccess } = useListTimesheets({ user: 1, month: currentMonth + 1 });
+	const { data: timesheets, isSuccess: timesheetsIsSuccess } = useListTimesheets({ user: user != null ? user.sub : null, month: currentMonth + 1 });
 	const { data: categories, isSuccess: categoriesIsSuccess } = useListCategories({});
 
 	const [newTimesheetIndex, setNewTimesheetIndex] = useState(0);
@@ -53,6 +56,7 @@ export default function ChargeHours() {
 	const [createTimesheet] = useCreateTimesheet();
 
 	const [deleteTimesheet] = useDeleteTimesheet();
+
 
 	useEffect(() => {
 		if (!timesheetsIsSuccess || !timesheets || timesheets.length === 0) {
@@ -66,7 +70,9 @@ export default function ChargeHours() {
 
 	async function onSubmit(data) {
 		if (data == null) return;
-		data.user_id = 1;
+		data.user_id = user.sub;
+		data.user_name = user.given_name || "";
+		data.user_lastname = user.family_name;
 		await createTimesheet(data);
 		cleanAll();
 	}
@@ -93,7 +99,7 @@ export default function ChargeHours() {
 							prevMonths.map((month) => {
 								return (
 									<Dropdown.Item key={month} onClick={() => setCurrentMonth(MONTHS.indexOf(month))}>
-										{/* {new Date(month).toLocaleDateString('en-US', { month: 'long' })} */ month}
+										{month}
 									</Dropdown.Item>
 								);
 							})}
@@ -120,8 +126,8 @@ export default function ChargeHours() {
 							timesheets.map((timesheet, index) => (
 							<tr key={index}>
 								<td>{index + 1}</td>
-								<td>{timesheet.firstName}</td>
-								<td>{timesheet.lastName}</td>
+								<td>{timesheet.user_name}</td>
+								<td>{timesheet.user_lastname}</td>
 								<td>{timesheet.task}</td>
 								<td>{timesheet.name}</td>
 								<td>{new Date(timesheet._date).toLocaleDateString()}</td>
@@ -145,10 +151,10 @@ export default function ChargeHours() {
 								</td>
 							</tr>
             			)}
-						<tr className='bg-color-white'>
+						{user && <tr className='bg-color-white'>
 							<td>{newTimesheetIndex}</td>
-							<td>Patrick</td>
-							<td>Dey</td>
+							<td>{user.given_name}</td>
+							<td>{user.family_name}</td>
 							<td>
 								<FormInput
 									name='task'
@@ -190,7 +196,7 @@ export default function ChargeHours() {
 									</Button>
 								</div>
 							</td>
-						</tr>
+						</tr>}
 					</tbody>
 				</Table>
 			</Form>

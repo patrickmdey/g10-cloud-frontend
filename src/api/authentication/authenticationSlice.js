@@ -30,10 +30,11 @@ export function useLogin() {
 			onSuccess: function (result) {
 				const accessToken = result.getAccessToken().getJwtToken();
 				setResult(accessToken);
-				setLoggedUser(result.getIdToken().payload.email);
+				setLoggedUser(result.getIdToken().payload);
 			},
 
 			onFailure: function (err) {
+				console.error(err);
 				setError(err);
 			},
 
