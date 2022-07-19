@@ -28,7 +28,7 @@ export function useLogin() {
 
 		cognitoUser.authenticateUser(authenticationDetails, {
 			onSuccess: function (result) {
-				const accessToken = result.getAccessToken().getJwtToken();
+				const accessToken = result.getIdToken().getJwtToken();
 				setResult(accessToken);
 				setLoggedUser(result.getIdToken().payload);
 			},
