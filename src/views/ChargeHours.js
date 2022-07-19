@@ -70,16 +70,19 @@ export default function ChargeHours() {
 
 	const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
-	function onSubmit(data) {
+	async function onSubmit(data) {
 		if (data == null) return;
 		data.user_id = 1;
-		createTimesheet(data);
+		await createTimesheet(data);
+		cleanAll();
 	}
 
 	function cleanAll() {
 		reset({
 			hours: 0,
-			task: ''
+			task: '',
+			date: null,
+			category: null
 		});
 	}
 
