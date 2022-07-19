@@ -39,16 +39,26 @@ export default function CheckProjects() {
 	} = useForm();
 
 	const [createCategory] = useCreateCategory();
+	const [isCreating, setIsCreating] = useState(false);
 
-	function onSubmit(data) {
-		createCategory(data);
+	async function onSubmit(data) {
+		if (data == null) return;
+		setIsCreating(true);
+		await createCategory(data);
+		setIsCreating(false);
 	}
 
 	return (
 		<div className='table-container'>
 			<div className='d-flex justify-content-between align-items-center mt-5'>
 				<h1 className='h1 fw-light'>{currentCategory != null ? 'Project: ' + currentCategory.name : ''}</h1>
-				<DropdownButton title='Select Project' align='end' variant='success' id='dropdown-basic'>
+				<DropdownButton
+					className='px-5'
+					title='Select Project'
+					align='end'
+					variant='success'
+					id='dropdown-basic'
+				>
 					{categoriesIsSuccess &&
 						categories &&
 						categories.length > 0 &&
@@ -60,7 +70,7 @@ export default function CheckProjects() {
 							);
 						})}
 					<Dropdown.Divider />
-					<Dropdown.ItemText className='d-flex align-text-center justify-center px-7 '>
+					<Dropdown.ItemText className='d-flex align-text-center justify-center '>
 						<Form onSubmit={handleSubmit(onSubmit)}>
 							<div className='d-flex justify-center align-center'>
 								<FormInput
@@ -72,9 +82,13 @@ export default function CheckProjects() {
 									placeholder='New Project'
 									validation={{ required: true, maxLength: 50, minLength: 3 }}
 								/>
-								<Button className='ms-2' color='success' type='submit'>
-									+
-								</Button>
+								{isCreating ? (
+									<Spinner animation='border' className='color-secondary' variant='primary' />
+								) : (
+									<Button className='ms-2' color='success' type='submit'>
+										+
+									</Button>
+								)}
 							</div>
 						</Form>
 					</Dropdown.ItemText>

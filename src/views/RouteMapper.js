@@ -5,7 +5,6 @@ import Home from './Home';
 import Error from '../components/Error.js';
 import useUserId from '../hooks/useUserId.js';
 import { useLocation, Navigate } from 'react-router-dom';
-import Register from './Register';
 import ChargeHours from './ChargeHours';
 import CheckProjects from './CheckProjects';
 

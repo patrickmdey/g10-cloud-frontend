@@ -44,13 +44,6 @@ function LoggedInNavBar(props) {
 				className='active color-grey'
 				id='collasible-nav-dropdown'
 			>
-				<NavDropdown.Item onClick={() => navigate('/')} style={{ display: 'inline-block' }}>
-					<div>
-						<BsFillInboxFill className='me-1' />
-						<span>Urls</span>
-					</div>
-				</NavDropdown.Item>
-
 				<NavDropdown.Item onClick={() => dispatch(setCredentials({ token: null, rememberMe: false }))}>
 					<span>
 						<BsBoxArrowInLeft className='me-1' />
