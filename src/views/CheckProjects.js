@@ -97,8 +97,8 @@ export default function CheckProjects() {
 							{timesheets.map((timesheet, index) => (
 								<tr key={index}>
 									<td>{index + 1}</td>
-									<td>{timesheet.firstName}</td>
-									<td>{timesheet.lastName}</td>
+									<td>{timesheet.user_name}</td>
+									<td>{timesheet.user_lastname}</td>
 									<td>{timesheet.task}</td>
 									<td>{new Date(timesheet._date).toLocaleDateString()}</td>
 									<td className='text-end'>{timesheet.hours}</td>

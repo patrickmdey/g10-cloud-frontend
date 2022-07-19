@@ -20,9 +20,9 @@ function LoggedInNavBar(props) {
 
 	return (
 		<>
-			<LinkContainer to='/'>
+			<LinkContainer to='/all'>
 				<Nav.Link as='a' className='active fw-bold nav-bar-link'>
-					Home
+					All Projects
 				</Nav.Link>
 			</LinkContainer>
 

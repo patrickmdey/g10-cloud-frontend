@@ -71,7 +71,7 @@ export default function ChargeHours() {
 	async function onSubmit(data) {
 		if (data == null) return;
 		data.user_id = user.sub;
-		data.user_name = user.given_name || "";
+		data.user_name = user.given_name;
 		data.user_lastname = user.family_name;
 		await createTimesheet(data);
 		cleanAll();
