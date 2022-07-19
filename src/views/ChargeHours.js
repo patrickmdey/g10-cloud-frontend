@@ -1,4 +1,4 @@
-import { Table, Button, Dropdown, InputGroup, FormControl } from 'react-bootstrap';
+import { Table, Button, Dropdown, InputGroup, FormControl, Spinner } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useCreateTimesheet, useDeleteTimesheet, useListTimesheets } from '../api/timesheets/timesheetsSlice.js';
 import { useListCategories } from '../api/categories/categoriesSlice.js';
@@ -22,14 +22,15 @@ const MONTHS = [
 	'November',
 	'December'
 ];
-function toMonth(idx) {
-	if (idx < 1) return MONTHS[12 + idx - 1];
 
-	return MONTHS[idx - 1];
+function toMonth(idx) {
+	if (idx < 0) return MONTHS[12 + idx];
+	console.log(`${idx}-${MONTHS[idx]}`);
+	return MONTHS[idx];
 }
 
 function usePrevMonths(currentMonth) {
-	const [prevMonths, _] = useState([currentMonth, currentMonth - 1, currentMonth - 2].map((n) => toMonth(n)));
+	const [prevMonths, _] = useState(Array.from({length: currentMonth + 1}, (__, i) => currentMonth - i).map((n) => toMonth(n)));
 	return prevMonths;
 }
 
@@ -41,7 +42,9 @@ export default function ChargeHours() {
 		reset
 	} = useForm();
 
-	const { data: timesheets, isSuccess: timesheetsIsSuccess } = useListTimesheets({ user: 1 });
+	const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+
+	const { data: timesheets, isSuccess: timesheetsIsSuccess } = useListTimesheets({ user: 1, month: currentMonth + 1 });
 	const { data: categories, isSuccess: categoriesIsSuccess } = useListCategories({});
 
 	const [newTimesheetIndex, setNewTimesheetIndex] = useState(0);
@@ -60,15 +63,6 @@ export default function ChargeHours() {
 		setNewTimesheetIndex(timesheets.length + 1);
 	}, [timesheetsIsSuccess, timesheets]);
 
-	useEffect(() => {
-		if (!timesheetsIsSuccess || !timesheets || timesheets.length === 0) {
-			return;
-		}
-
-		setCurrentMonth(prevMonths[0]);
-	}, [timesheetsIsSuccess, timesheets]);
-
-	const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
 	async function onSubmit(data) {
 		if (data == null) return;
@@ -92,15 +86,13 @@ export default function ChargeHours() {
 				<h1 className='h1 fw-light'>My Hours</h1>
 				<Dropdown>
 					<Dropdown.Toggle variant='success' id='dropdown-basic'>
-						Select Month
+						Selected Month: <b>{MONTHS[currentMonth]}</b>
 					</Dropdown.Toggle>
 					<Dropdown.Menu>
-						{timesheetsIsSuccess &&
-							timesheets &&
-							timesheets.length > 0 &&
+						{
 							prevMonths.map((month) => {
 								return (
-									<Dropdown.Item key={month} onClick={() => setCurrentMonth(month)}>
+									<Dropdown.Item key={month} onClick={() => setCurrentMonth(MONTHS.indexOf(month))}>
 										{/* {new Date(month).toLocaleDateString('en-US', { month: 'long' })} */ month}
 									</Dropdown.Item>
 								);
@@ -124,27 +116,37 @@ export default function ChargeHours() {
 						</tr>
 					</thead>
 					<tbody>
-						{timesheetsIsSuccess &&
-							timesheets &&
+					{timesheetsIsSuccess && timesheets ? (
 							timesheets.map((timesheet, index) => (
-								<tr key={index}>
-									<td>{index + 1}</td>
-									<td>{timesheet.firstName}</td>
-									<td>{timesheet.lastName}</td>
-									<td>{timesheet.task}</td>
-									<td>{timesheet.name}</td>
-									<td>{new Date(timesheet._date).toLocaleDateString()}</td>
-									<td>{timesheet.hours}</td>
-									<td className='align-middle'>
-										<div className='d-flex justify-content-center align-items-center'>
-											<Button variant='btn-link' onClick={() => deleteTimesheet(timesheet.id)}>
-												<BsTrash className='fa-lg color-danger' />
-											</Button>
-										</div>
-									</td>
-								</tr>
-							))}
-
+							<tr key={index}>
+								<td>{index + 1}</td>
+								<td>{timesheet.firstName}</td>
+								<td>{timesheet.lastName}</td>
+								<td>{timesheet.task}</td>
+								<td>{timesheet.name}</td>
+								<td>{new Date(timesheet._date).toLocaleDateString()}</td>
+								<td>{timesheet.hours}</td>
+								<td className="align-middle">
+								<div className="d-flex justify-content-center align-items-center">
+									<Button
+									variant="btn-link"
+									onClick={() => deleteTimesheet(timesheet.id)}
+									>
+									<BsTrash className="fa-lg color-danger" />
+									</Button>
+								</div>
+								</td>
+							</tr>
+							))
+							) : (
+							<div className="d-flex justify-content-center">
+								<Spinner
+								animation="border"
+								className="color-secondary"
+								variant="primary"
+								/>
+							</div>
+            			)}
 						<tr className='bg-color-white'>
 							<td>{newTimesheetIndex}</td>
 							<td>Patrick</td>

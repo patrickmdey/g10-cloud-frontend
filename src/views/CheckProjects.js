@@ -22,6 +22,7 @@ export default function CheckProjects() {
 
 	useEffect(() => {
 		if (!timesheetsIsSuccess || !timesheets || timesheets.length === 0) {
+			setTotalHours(0);
 			return;
 		}
 		let total = 0;

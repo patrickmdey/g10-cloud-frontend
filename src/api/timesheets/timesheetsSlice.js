@@ -8,10 +8,12 @@ const TimesheetsApiSlice = BaseApiSlice.injectEndpoints({
 		}),
 
 		listTimesheets: build.query({
-			query: ({ category, user, orderBy }) =>
-				`timesheets?${category ? `category_id=${category.id}&` : ''}${user ? `user_id=${user}&` : ''}${
-					orderBy ? `order_by=${orderBy}&` : ''
-				}`,
+			query: ({ category, user, month, orderBy }) =>
+				`timesheets?
+				${category ? `category_id=${category.id}&` : ''}
+				${user ? `user_id=${user}&` : ''}
+				${month ? `month=${month}&` : ''}
+				${orderBy ? `order_by=${orderBy}&` : ''}`,
 			providesTags: (result) =>
 				result && result.data
 					? [
