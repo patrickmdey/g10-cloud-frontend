@@ -8,8 +8,7 @@ const CategoriesApiSlice = BaseApiSlice.injectEndpoints({
 		}),
 
 		listCategories: build.query({
-			query: ({ category, orderBy }) =>
-				`categories?${category ? `category_id=${category}&` : ''}${orderBy ? `order_by=${orderBy}&` : ''}`,
+			query: ({ category, orderBy }) => `categories`,
 			providesTags: (result) =>
 				result && result.data
 					? [

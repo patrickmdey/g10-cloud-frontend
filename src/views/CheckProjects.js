@@ -5,15 +5,15 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 
 export default function CheckProjects() {
-	const { data: categories, isSuccess: categoriesIsSuccess } = useListCategories();
-	const { data: timesheets, isSuccess: timesheetsIsSuccess } = useListTimesheets({ category: currentCategory });
-
 	const [currentCategory, setCurrentCategory] = useState(null);
 	const [totalHours, setTotalHours] = useState(0);
 
+	const { data: categories, isSuccess: categoriesIsSuccess } = useListCategories({});
+	const { data: timesheets, isSuccess: timesheetsIsSuccess } = useListTimesheets({ category: currentCategory });
+
 	useEffect(() => {
 		if (!categoriesIsSuccess || !categories || categories.length === 0) {
-			setCurrentCategory(0);
+			setCurrentCategory(null);
 			return;
 		}
 		setCurrentCategory(categories[0]);
@@ -32,12 +32,11 @@ export default function CheckProjects() {
 
 	return (
 		<div className='table-container'>
-			<h1 className='h1 fw-bold'>Check Projects</h1>
-			<hr></hr>
-			<div className='d-flex justify-content-start align-items-center'>
+			<div className='d-flex justify-content-between align-items-center mt-5'>
+				<h1 className='h1 fw-light'>Check Projects</h1>
 				<Dropdown>
 					<Dropdown.Toggle variant='success' id='dropdown-basic'>
-						Select Project
+						{currentCategory != null ? currentCategory.name : 'Select Project'}
 					</Dropdown.Toggle>
 					<Dropdown.Menu>
 						{categoriesIsSuccess &&
@@ -45,10 +44,9 @@ export default function CheckProjects() {
 							categories.length > 0 &&
 							categories.map((category) => {
 								return (
-									<Dropdown.Item
-										key={category.id}
-										onClick={() => setCurrentCategory(category)}
-									></Dropdown.Item>
+									<Dropdown.Item key={category.id} onClick={() => setCurrentCategory(category)}>
+										{category.name}
+									</Dropdown.Item>
 								);
 							})}
 					</Dropdown.Menu>
@@ -66,18 +64,18 @@ export default function CheckProjects() {
 					</tr>
 				</thead>
 				<tbody>
-					{currentCategory &&
-						currentCategory.tasks &&
-						currentCategory.timesheets.map((timesheet, index) => {
+					{timesheetsIsSuccess &&
+						timesheets &&
+						timesheets.map((timesheet, index) => (
 							<tr key={index}>
 								<td>{index + 1}</td>
 								<td>{timesheet.firstName}</td>
 								<td>{timesheet.lastName}</td>
-								<td>{timesheet.hours}</td>
 								<td>{timesheet.task}</td>
-								<td>{timesheet.date}</td>
-							</tr>;
-						})}
+								<td>{new Date(timesheet._date).toLocaleDateString()}</td>
+								<td className='text-end'>{timesheet.hours}</td>
+							</tr>
+						))}
 					<tr>
 						<td colSpan={5}></td>
 						<td className='text-end'>

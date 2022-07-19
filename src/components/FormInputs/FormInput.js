@@ -23,16 +23,14 @@ export default function FormInput(props) {
 	const errorDesc = useErrorMessage(errorMessage, error, validation);
 	return (
 		<FormGroup>
-			<FormLabel>{label}</FormLabel>
+			{label != null && <FormLabel>{label}</FormLabel>}
 			<InputGroup>
 				{prependIcon != null && <InputGroup.Text>{prependIcon}</InputGroup.Text>}
 				<FormControl
 					as={as === undefined ? 'input' : as}
 					type={type === 'password' && show ? 'text' : type}
 					{...(type === 'number'
-						? { step: '0.01' }
-						: type === 'date'
-						? { min: new Date().toISOString().split('T')[0] }
+						? { step: '0.5' }
 						: {})}
 					defaultValue={value}
 					placeholder={placeholder}
